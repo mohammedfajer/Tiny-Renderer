@@ -1,9 +1,8 @@
-﻿Build started 03/05/2024 22:56:02.
+﻿Build started 03/05/2024 23:21:07.
 Logging verbosity is set to: Normal.     1>Project "C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Tiny Renderer.vcxproj" on node 2 (Build target(s)).
      1>PrepareForBuild:
          Structured output is enabled. The formatting of compiler diagnostics will reflect the error hierarchy. See https://aka.ms/cpp/structured-output for more details.
        InitializeBuildStatus:
-         Creating "Tiny Renderer\x64\Debug\Tiny Renderer.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
          Touching "Tiny Renderer\x64\Debug\Tiny Renderer.tlog\unsuccessfulbuild".
        ClCompile:
          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\bin\HostX64\x64\CL.exe /c /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /Od /D _DEBUG /D _CONSOLE /D _UNICODE /D UNICODE /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /permissive- /Fo"Tiny Renderer\x64\Debug\\" /Fd"Tiny Renderer\x64\Debug\vc143.pdb" /external:W3 /Gd /TP /FC /errorReport:prompt /FS Source.cpp
@@ -12,7 +11,7 @@ Logging verbosity is set to: Normal.     1>Project "C:\Users\moham\OneDrive\Desk
      1>C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(10,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
      1>C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(11,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
      1>C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(22,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-     1>C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(51,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+     1>C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(50,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
        Link:
          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\bin\HostX64\x64\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\x64\Debug\Tiny Renderer.exe" /INCREMENTAL /ILK:"Tiny Renderer\x64\Debug\Tiny Renderer.ilk" /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\x64\Debug\Tiny Renderer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\x64\Debug\Tiny Renderer.lib" /MACHINE:X64 "Tiny Renderer\x64\Debug\model.obj"
          "Tiny Renderer\x64\Debug\Source.obj"
@@ -31,9 +30,9 @@ Build succeeded.
          C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(10,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
          C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(11,15): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
          C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(22,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
-         C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(51,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+         C:\Users\moham\OneDrive\Desktop\TinyRenderer\Tiny Renderer\Tiny Renderer\Tiny-Renderer\Source.cpp(50,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
 
     5 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:00.56
+Time Elapsed 00:00:00.52
