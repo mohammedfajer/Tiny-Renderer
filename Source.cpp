@@ -258,7 +258,7 @@ bool IsInsideTriangle(Vec2i point, Triangle &tri)
 }
 
 // Find the smallest axis-aligned bounding box
-BoundingBox ComputeTriangleBoundingBox(Triangle &tri)
+inline BoundingBox ComputeTriangleBoundingBox(Triangle &tri)
 {
     float min_x = std::min({ tri.v0.x, tri.v1.x, tri.v2.x });
     float max_x = std::max({ tri.v0.x, tri.v1.x, tri.v2.x });
@@ -283,14 +283,14 @@ void TriangleFill(Triangle &tri, TGAImage &image, TGAColor color)
 	std::cout << "Bounding Box: x=" << bb.x << ", y=" << bb.y
 		<< ", w=" << bb.w << ", h=" << bb.h << std::endl;
 
-    FinalAttemptLine(bb.x, bb.y, bb.x + bb.w, bb.y, image, {255,0,255,255});
+   /* FinalAttemptLine(bb.x, bb.y, bb.x + bb.w, bb.y, image, {255,0,255,255});
     FinalAttemptLine(bb.x, bb.y, bb.x, bb.y + bb.h, image, { 255,0,255,255 });
     FinalAttemptLine(bb.x + bb.w, bb.y, bb.x + bb.w, bb.y + bb.h, image, { 255,0,255,255 });
     FinalAttemptLine(bb.x, bb.y + bb.h, bb.x + bb.w, bb.y + bb.h, image, { 255,0,255,255 });
 
 	image.set(tri.v0.x, tri.v0.y, red);
 	image.set(tri.v1.x, tri.v1.y, red);
-	image.set(tri.v2.x, tri.v2.y, red);
+	image.set(tri.v2.x, tri.v2.y, red);*/
 
     for (int x = bb.x; x < bb.x + bb.w; x++)
     {
@@ -302,8 +302,6 @@ void TriangleFill(Triangle &tri, TGAImage &image, TGAColor color)
             }
         }
     }
-
-	
 }
 
 
@@ -334,6 +332,61 @@ void RenderWireFrame(TGAImage &image, int width, int height, TGAColor color = wh
     image.write_tga_file("wireframe.tga");
 }
 
+void FlatShadingRender(TGAImage &image, int width, int height)
+{
+    Model *model = new Model("./african_head.obj"); 
+
+	for (int i = 0; i < model->nfaces(); i++)
+	{
+		std::vector<int> face = model->face(i);
+        Vec2i screen_coords[3];
+
+		for (int j = 0; j < 3; j++)
+		{
+            Vec3f world_coords = model->vert(face[j]);
+            screen_coords[j] = Vec2i((world_coords.x + 1.) * width / 2., (world_coords.y + 1.) * height / 2.);
+		}
+
+        Triangle triangle = { screen_coords[0], screen_coords[1], screen_coords[2] };
+
+        TriangleFill(triangle, image, TGAColor(rand() % 255, rand() % 255, rand() % 255, 255));
+	}
+
+	image.flip_vertically();
+	image.write_tga_file("flatshading.tga");
+}
+
+void FlatShadingRenderTakeTwo(TGAImage &image, int width, int height)
+{
+	Model * model = new Model("./african_head.obj");
+
+    Vec3f lightDir(0, 0, -1);
+
+	for (int i = 0; i < model->nfaces(); i++)
+	{
+		std::vector<int> face = model->face(i);
+		Vec2i screen_coords[3];
+        Vec3f world_coords[3];
+
+		for (int j = 0; j < 3; j++)
+		{
+			Vec3f v = model->vert(face[j]);
+			screen_coords[j] = Vec2i((v.x + 1.) * width / 2., (v.y + 1.) * height / 2.);
+			world_coords[j] = v;
+		}
+
+		Vec3f n = (world_coords[2] - world_coords[0]) ^ (world_coords[1] - world_coords[0]);
+		n.normalize();
+        float intensity = n * lightDir;
+		if (intensity > 0) {
+            Triangle triangle = { screen_coords[0], screen_coords[1], screen_coords[2] };
+            TriangleFill(triangle, image, TGAColor(intensity * 255, intensity * 255, intensity * 255, 255));
+		}	
+	}
+
+	image.flip_vertically();
+	image.write_tga_file("flatshadingtake2.tga");
+}
 
 int main(int argc, char **argv) {
 
@@ -376,7 +429,7 @@ int main(int argc, char **argv) {
 
     
    
-    Triangle t0 = { Vec2i(10, 70),   Vec2i(50, 160),  Vec2i(70, 80) };
+  /*  Triangle t0 = { Vec2i(10, 70),   Vec2i(50, 160),  Vec2i(70, 80) };
     Triangle t1 = { Vec2i(180, 50),  Vec2i(150, 1),   Vec2i(70, 180) };
     Triangle t2 = { Vec2i(180, 150), Vec2i(120, 160), Vec2i(130, 180) };
 
@@ -384,8 +437,9 @@ int main(int argc, char **argv) {
     TriangleFill(t1, image, white);
     TriangleFill(t2, image, { 0, 255, 0, 255 });
 	image.flip_vertically();
-	image.write_tga_file("triangles.tga");
+	image.write_tga_file("triangles.tga");*/
 
+    FlatShadingRenderTakeTwo(image, width, height);
 
     image.flip_vertically();
     image.write_tga_file("output.tga");
