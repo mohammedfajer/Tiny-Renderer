@@ -1,7 +1,5 @@
 #include "tgaimage.h"
-
 #include "model.h"
-
 
 const TGAColor white = TGAColor(255, 255, 255, 255);
 const TGAColor red = TGAColor(255, 0, 0, 255);
@@ -214,9 +212,104 @@ void FinalAttemptLine(int x0, int y0, int x1, int y1, TGAImage &image, TGAColor 
 }
 
 
+struct BoundingBox
+{
+    int x;
+    int y;
+    int w;
+    int h;
+};
+
+struct Triangle
+{
+    Vec2i v0;
+    Vec2i v1;
+    Vec2i v2;
+};
+
+
+Vec3i CrossProduct(Vec3i a, Vec3i b)
+{
+    Vec3i result = {};
+
+    result.x = a.y * b.z - a.z * b.y;
+    result.y = a.z * b.x - a.x * b.z;
+    result.z = a.x * b.y - a.y * b.x;
+
+    return result;
+}
+
+bool IsInsideTriangle(Vec2i point, Triangle &tri)
+{
+	Vec2i s1 = tri.v1 - tri.v0;
+	Vec2i s2 = tri.v2 - tri.v1;
+	Vec2i s3 = tri.v0 - tri.v2;
+
+	Vec2i t1 = point - tri.v0;
+	Vec2i t2 = point - tri.v1;
+	Vec2i t3 = point - tri.v2;
+
+	Vec3i r1 = CrossProduct(Vec3i{ s1.x, s1.y, 0 }, Vec3i{ t1.x, t1.y, 0 });
+	Vec3i r2 = CrossProduct(Vec3i{ s2.x, s2.y, 0 }, Vec3i{ t2.x, t2.y, 0 });
+	Vec3i r3 = CrossProduct(Vec3i{ s3.x, s3.y, 0 }, Vec3i{ t3.x, t3.y, 0 });
+
+	// Check if all z-components have the same sign
+	return (r1.z >= 0 && r2.z >= 0 && r3.z >= 0) || (r1.z <= 0 && r2.z <= 0 && r3.z <= 0);
+}
+
+// Find the smallest axis-aligned bounding box
+BoundingBox ComputeTriangleBoundingBox(Triangle &tri)
+{
+    float min_x = std::min({ tri.v0.x, tri.v1.x, tri.v2.x });
+    float max_x = std::max({ tri.v0.x, tri.v1.x, tri.v2.x });
+
+    float min_y = std::min({ tri.v0.y, tri.v1.y, tri.v2.y });
+    float max_y = std::max({ tri.v0.y, tri.v1.y, tri.v2.y });
+
+    float width = max_x - min_x;
+    float height = max_y - min_y;
+
+    BoundingBox result = { min_x, min_y, width, height };
+
+    return result;
+}
+
+
+// taking from https://erkaman.github.io/posts/fast_triangle_rasterization.html
+void TriangleFill(Triangle &tri, TGAImage &image, TGAColor color)
+{
+    BoundingBox bb = ComputeTriangleBoundingBox(tri);
+
+	std::cout << "Bounding Box: x=" << bb.x << ", y=" << bb.y
+		<< ", w=" << bb.w << ", h=" << bb.h << std::endl;
+
+    FinalAttemptLine(bb.x, bb.y, bb.x + bb.w, bb.y, image, {255,0,255,255});
+    FinalAttemptLine(bb.x, bb.y, bb.x, bb.y + bb.h, image, { 255,0,255,255 });
+    FinalAttemptLine(bb.x + bb.w, bb.y, bb.x + bb.w, bb.y + bb.h, image, { 255,0,255,255 });
+    FinalAttemptLine(bb.x, bb.y + bb.h, bb.x + bb.w, bb.y + bb.h, image, { 255,0,255,255 });
+
+	image.set(tri.v0.x, tri.v0.y, red);
+	image.set(tri.v1.x, tri.v1.y, red);
+	image.set(tri.v2.x, tri.v2.y, red);
+
+    for (int x = bb.x; x < bb.x + bb.w; x++)
+    {
+        for (int y = bb.y; y < bb.y + bb.h; y++)
+        {
+            if (IsInsideTriangle({ x,y }, tri))
+            {
+                image.set(x, y, color);
+            }
+        }
+    }
+
+	
+}
+
+
 void RenderWireFrame(TGAImage &image, int width, int height, TGAColor color = white)
 {
-    Model * model = new Model("./african_head.obj");
+    Model * model = new Model("./african_head.obj"); // 
 
     for (int i = 0; i < model->nfaces(); i++)
     {
@@ -277,15 +370,24 @@ int main(int argc, char **argv) {
 	//LineDraw(80, 40, 13, 20, image, red);
 #pragma endregion
 
+   
+   
+    // RenderWireFrame(image, width, height, { 245, 5, 121, 255 });
 
     
+   
+    Triangle t0 = { Vec2i(10, 70),   Vec2i(50, 160),  Vec2i(70, 80) };
+    Triangle t1 = { Vec2i(180, 50),  Vec2i(150, 1),   Vec2i(70, 180) };
+    Triangle t2 = { Vec2i(180, 150), Vec2i(120, 160), Vec2i(130, 180) };
 
-    
+    TriangleFill(t0, image, red);
+    TriangleFill(t1, image, white);
+    TriangleFill(t2, image, { 0, 255, 0, 255 });
+	image.flip_vertically();
+	image.write_tga_file("triangles.tga");
+
 
     image.flip_vertically();
-   
-    RenderWireFrame(image, width, height, { 245, 5, 121, 255 });
-
     image.write_tga_file("output.tga");
     
     return 0;
